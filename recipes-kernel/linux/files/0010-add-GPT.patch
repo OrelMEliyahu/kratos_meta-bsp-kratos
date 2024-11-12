@@ -1,0 +1,98 @@
+From ca7595b43342fe08998b5d5c33e8cee49eb7ad37 Mon Sep 17 00:00:00 2001
+From: OrelEKratos <orel_e@eyal-emi.co.il>
+Date: Tue, 29 Oct 2024 04:25:56 -0700
+Subject: [PATCH] add GPT
+
+---
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 22 ++++++++++++++++++--
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c      |  0
+ drivers/firmware/imx/scu-pd.c                |  0
+ include/uapi/linux/hx280enc.h                |  0
+ oe-logs                                      |  1 +
+ oe-workdir                                   |  1 +
+ sound/soc/fsl/fsl_easrc_m2m.c                |  0
+ 7 files changed, 22 insertions(+), 2 deletions(-)
+ mode change 100755 => 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+ mode change 100755 => 100644 drivers/firmware/imx/scu-pd.c
+ mode change 100755 => 100644 include/uapi/linux/hx280enc.h
+ create mode 120000 oe-logs
+ create mode 120000 oe-workdir
+ mode change 100755 => 100644 sound/soc/fsl/fsl_easrc_m2m.c
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+index 7bbf29e0a13e..4adf12c4c979 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -35,6 +35,18 @@ memory@40000000 {
+ 		reg = <0x0 0x40000000 0 0xc0000000>,
+ 		      <0x1 0x00000000 0 0xc0000000>;
+ 	};
++	
++	gpt1: timer@302d0000 {
++	    compatible = "fsl,imx8mp-gpt", "fsl,imx7d-gpt";
++	    reg = <0x302d0000 0x10000>;
++	    interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++	    clocks = <&clk IMX8MP_CLK_GPT1>;
++	    clock-names = "ipg";
++	    pinctrl-names = "default";
++	    pinctrl-0 = <&pinctrl_gpt1>;
++	    status = "okay";
++	};
++
+ 
+ 	reg_can1_stby: regulator-can1-stby {
+ 		compatible = "regulator-fixed";
+@@ -1122,10 +1134,8 @@ pinctrl_sai3: sai3grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI3_TX_SYNC	0xd6
+ 			MX8MP_IOMUXC_SAI3_RXD__AUDIOMIX_SAI3_RX_DATA00	0xd6
+-			MX8MP_IOMUXC_SAI3_TXD__AUDIOMIX_SAI3_TX_DATA00	0xd6
+ 			MX8MP_IOMUXC_SAI3_MCLK__AUDIOMIX_SAI3_MCLK	0xd6
+ 			MX8MP_IOMUXC_SAI3_RXFS__GPIO4_IO28		0xd6
+-			MX8MP_IOMUXC_SAI3_RXC__GPIO4_IO29		0xd6
+ 		>;
+ 	};
+ 
+@@ -1182,6 +1192,14 @@ MX8MP_IOMUXC_UART4_RXD__UART4_DCE_RX    0x140
+                        MX8MP_IOMUXC_UART4_TXD__UART4_DCE_TX    0x140
+                >;
+        };
++       
++      pinctrl_gpt1: gpt1grp {
++		fsl,pins = <
++		    MX8MP_IOMUXC_SAI3_RXC__GPT1_CLK            0x00000106
++		    MX8MP_IOMUXC_SAI3_TXD__GPT1_CAPTURE2       0x00000106
++		>;
++       };
++
+ 
+ 	pinctrl_usdhc2: usdhc2grp {
+ 		fsl,pins = <
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+old mode 100755
+new mode 100644
+diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
+old mode 100755
+new mode 100644
+diff --git a/include/uapi/linux/hx280enc.h b/include/uapi/linux/hx280enc.h
+old mode 100755
+new mode 100644
+diff --git a/oe-logs b/oe-logs
+new file mode 120000
+index 000000000000..6c08ea361da6
+--- /dev/null
++++ b/oe-logs
+@@ -0,0 +1 @@
++/home/orel/Downloads/Petalinux20231/Projects/DLP-AR/yocto140824/build/tmp/work/imx8mpevk-poky-linux/linux-imx/5.15.71+git999-r0/temp
+\ No newline at end of file
+diff --git a/oe-workdir b/oe-workdir
+new file mode 120000
+index 000000000000..a49f7219afab
+--- /dev/null
++++ b/oe-workdir
+@@ -0,0 +1 @@
++/home/orel/Downloads/Petalinux20231/Projects/DLP-AR/yocto140824/build/tmp/work/imx8mpevk-poky-linux/linux-imx/5.15.71+git999-r0
+\ No newline at end of file
+diff --git a/sound/soc/fsl/fsl_easrc_m2m.c b/sound/soc/fsl/fsl_easrc_m2m.c
+old mode 100755
+new mode 100644
